@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Arduino Blockly</title>
+  <script src="blockly/blockly_compressed.js"></script>
+  <script src="blockly/blocks_compressed.js"></script>
+  <script src="blockly/javascript_compressed.js"></script>
+  <script src="blocks/arduino.js"></script>
+  <style>
+    body { margin: 0; }
+    #blocklyDiv { height: 600px; width: 100%; }
+    #generated { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div id="blocklyDiv"></div>
+  <button onclick="generateCode()">Сгенерировать Arduino код</button>
+  <pre id="generated"></pre>
+
+  <script>
+    const workspace = Blockly.inject('blocklyDiv', {
+      toolbox: document.getElementById('toolbox')
+    });
+
+    function generateCode() {
+      const code = Blockly.Arduino.workspaceToCode(workspace);
+      document.getElementById('generated').textContent = code;
+    }
+  </script>
+
+  <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+    <category name="Пины" colour="#FF6600">
+      <block type="arduino_pin_digital_write"></block>
+      <block type="arduino_pin_digital_read"></block>
+      <block type="arduino_pin_analog_write"></block>
+      <block type="arduino_pin_analog_read"></block>
+    </category>
+    <category name="Логика" colour="#800080">
+      <block type="controls_if"></block>
+      <block type="logic_boolean"></block>
+    </category>
+    <category name="Циклы" colour="#008080">
+      <block type="controls_repeat_ext"></block>
+    </category>
+    <category name="Время" colour="#5C94FF">
+      <block type="arduino_delay"></block>
+    </category>
+  </xml>
+</body>
+</html>
