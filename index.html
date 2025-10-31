@@ -8,42 +8,52 @@
   <script src="blockly/javascript_compressed.js"></script>
   <script src="blocks/arduino.js"></script>
   <style>
-    body { margin: 0; }
-    #blocklyDiv { height: 600px; width: 100%; }
-    #generated { margin-top: 10px; }
+    body { font-family: sans-serif; margin: 0; padding: 8px; }
+    #blocklyDiv { height: 500px; width: 100%; border: 1px solid #ccc; }
+    #generated { margin-top: 10px; padding: 10px; background: #f5f5f5; white-space: pre-wrap; }
   </style>
 </head>
 <body>
+  <h2>Arduino Visual Programming</h2>
   <div id="blocklyDiv"></div>
   <button onclick="generateCode()">Сгенерировать Arduino код</button>
-  <pre id="generated"></pre>
+  <pre id="generated">// Код появится здесь</pre>
 
   <script>
     const workspace = Blockly.inject('blocklyDiv', {
-      toolbox: document.getElementById('toolbox')
+      toolbox: document.getElementById('toolbox'),
+      trashcan: true,
+      scrollbars: true
     });
 
     function generateCode() {
-      const code = Blockly.Arduino.workspaceToCode(workspace);
-      document.getElementById('generated').textContent = code;
+      // Оборачиваем в setup/loop
+      const setupBlocks = workspace.getBlocksByType('arduino_setup');
+      const loopBlocks = workspace.getBlocksByType('arduino_loop');
+
+      let setupCode = '';
+      let loopCode = '';
+
+      if (setupBlocks.length > 0) {
+        setupCode = Blockly.Arduino.blockToCode(setupBlocks[0]);
+      }
+      if (loopBlocks.length > 0) {
+        loopCode = Blockly.Arduino.blockToCode(loopBlocks[0]);
+      }
+
+      const fullCode = `void setup() {\n${setupCode || '  // пусто'}\n}\n\nvoid loop() {\n${loopCode || '  // пусто'}\n}`;
+      document.getElementById('generated').textContent = fullCode;
     }
   </script>
 
+  <!-- Toolbox -->
   <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+    <category name="Arduino" colour="#3399FF">
+      <block type="arduino_setup"></block>
+      <block type="arduino_loop"></block>
+    </category>
     <category name="Пины" colour="#FF6600">
       <block type="arduino_pin_digital_write"></block>
-      <block type="arduino_pin_digital_read"></block>
-      <block type="arduino_pin_analog_write"></block>
-      <block type="arduino_pin_analog_read"></block>
-    </category>
-    <category name="Логика" colour="#800080">
-      <block type="controls_if"></block>
-      <block type="logic_boolean"></block>
-    </category>
-    <category name="Циклы" colour="#008080">
-      <block type="controls_repeat_ext"></block>
-    </category>
-    <category name="Время" colour="#5C94FF">
       <block type="arduino_delay"></block>
     </category>
   </xml>
