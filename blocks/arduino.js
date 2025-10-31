@@ -19,3 +19,17 @@ Blockly.Arduino['arduino_delay'] = function(block) {
 };
 
 // Аналогично добавляются analogWrite, analogRead и др.
+
+Blockly.Blocks['arduino_pin_digital_write'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Цифровой вывод")
+        .appendField(new Blockly.FieldDropdown([["13","13"],["12","12"],["11","11"],["10","10"],["9","9"],["8","8"]]), "PIN")
+        .appendField("в")
+        .appendField(new Blockly.FieldDropdown([["ВЫСОКИЙ","HIGH"],["НИЗКИЙ","LOW"]]), "STATE");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(330);
+    this.setTooltip("Установить цифровой пин в HIGH или LOW");
+  }
+};
